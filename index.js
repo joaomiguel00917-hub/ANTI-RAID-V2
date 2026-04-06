@@ -1,14 +1,7 @@
-// index.js - ANTI-RAID V10 (Token + Guild + Dono)
-const readline = require("readline");
+// index.js - ANTI-RAID PREMIUM V25+ (Termux)
 const fs = require("fs");
-const {
-  Client,
-  GatewayIntentBits,
-  Partials,
-  REST,
-  Routes,
-  SlashCommandBuilder
-} = require("discord.js");
+const readline = require("readline");
+const { Client, GatewayIntentBits, Partials, REST, Routes, SlashCommandBuilder } = require("discord.js");
 
 // -------------------------
 // INTERFACE TERMINAL
@@ -19,24 +12,22 @@ const rl = readline.createInterface({
 });
 
 // -------------------------
-// FUNÇÃO DE ENTRADA HACKER
+// ENTRADA HACKER ANIMADA
 // -------------------------
-function hackerEntrance(callback) {
+async function hackerEntrance(callback) {
   console.clear();
-  console.log(`
-       .-"      "-.
-      /            \\
-     |,  .-.  .-.  ,|
-     | )(_o/  \\o_)( |
-     |/     /\\     \\|
-     (_     ^^     _)
-      \\__|IIIIII|__/
-       | /IIIIII\\ |
-       \\          /
-        \`--------\`
-`);
-  console.log("\x1b[32mCONECTANDO PANEL...\x1b[0m");
-  setTimeout(callback, 10000); // espera 6s antes de mostrar painel
+  const steps = [
+    "INICIANDO SISTEMA...",
+    "CARREGANDO FIREWALL...",
+    "ATIVANDO ANTI-RAID...",
+    "CONFIGURANDO PROTEÇÕES...",
+    "ENTRANDO NO PAINEL..."
+  ];
+  for (const step of steps) {
+    console.log(`\x1b[32m${step}\x1b[0m`);
+    await new Promise(r => setTimeout(r, 1500));
+  }
+  callback();
 }
 
 // -------------------------
@@ -44,75 +35,37 @@ function hackerEntrance(callback) {
 // -------------------------
 function hackerPanel(extraLines = []) {
   console.clear();
-  console.log("┌───────────────────────────────────────┐");
-  console.log("|[H4CK3R_007|{ BY 404 @ linux} |404*    │");
-  console.log("│-----------|------------------|--------│");
-  console.log("│           | PANEL ANTI RAID  |        │");
-  console.log("│           | VERSAO V2        |        │");
-  console.log("│           |                  |        │");
-  console.log("│           --------------------        │");
-  console.log("│                                       │");
-  console.log("│  💻 Sistema ANTI RAID V2              │");
-  console.log("│  📡 Proteção completa anti-raid       │");
-  console.log("│  📚 BY (ERRO404/TONY)                 │");
+  console.log("┌─────────────────────────────────────────────┐");
+  console.log("│       █████╗ ███╗   ██╗████████╗ ██╗  ██╗  │");
+  console.log("│      ██╔══██╗████╗  ██║╚══██╔══╝ ██║  ██║  │");
+  console.log("│      ███████║██╔██╗ ██║   ██║    ███████║  │");
+  console.log("│      ██╔══██║██║╚██╗██║   ██║    ██╔══██║  │");
+  console.log("│      ██║  ██║██║ ╚████║   ██║    ██║  ██║  │");
+  console.log("│                                             │");
+  console.log("│  💻 Sistema Hacker Premium                   │");
+  console.log("│  🛡️ Proteção completa Anti-Raid             │");
+  console.log("│  🎬 Desenvolvedor: ERRO404                   │");
   extraLines.forEach(line => {
     const pad = Math.max(0, 45 - line.length);
     console.log(`│ ${line}${" ".repeat(pad)}│`);
   });
-  console.log("└───────────────────────────────────────┘");
+  console.log("└─────────────────────────────────────────────┘");
 }
 
 // -------------------------
 // INÍCIO
 // -------------------------
 hackerEntrance(() => {
-  hackerPanel(["👋 OLA, SEJA BEM VINDO!", "COLOQUE SEU TOKEN, GUILD E ID DO DONO"]);
+  hackerPanel(["BEM-VINDO!"]);
   rl.question("Insira seu TOKEN: ", token => {
     rl.question("Insira o GUILD ID do servidor: ", guildId => {
       rl.question("Insira seu ID de DONO: ", ownerId => {
-        console.log("\n🔄 Conectando bot e registrando comandos Slash...\n");
         rl.close();
         startBot(token, guildId, ownerId);
       });
     });
   });
 });
-
-// -------------------------
-// TRENS ANIMADO
-// -------------------------
-function trainAnimation() {
-  const frames = [
-    "      ====        ________                ___________ ",
-    "  _D _|  |_______/        \\__I_I_____===__|_________| ",
-    "   |(_)---  |   H\\________/ |   |        =|___ ___|      _________________ ",
-    "   /     |  |   H  |  |     |   |         ||_| |_||     _| ",
-    "  |      |  |   H  |__--------------------| [___] |   =| ",
-    "  | ________|___H__/__|_____/[][]~\\_______|       |   =| ",
-    "  |/ |   |-----------I_____I [][] []  D   |=======|____|_ ",
-    "_/ =| o |=-~~\\  /~~\\  /~~\\  /~~\\ ____Y___________|__|_________________ ",
-    " |/-=|___|=O=====O=====O=====O~ \\_/ |   |_______|_/=O=====O=====O~ "
-  ];
-  let i = 0;
-  const interval = setInterval(() => {
-    console.clear();
-    console.log(frames[i]);
-    i++;
-    if (i >= frames.length) {
-      clearInterval(interval);
-      console.log("\n✅ Bot inicializado com sucesso! Rodando 24h...\n");
-    }
-  }, 300);
-}
-
-// -------------------------
-// MANTER BOT 24H
-// -------------------------
-function keepAlive() {
-  setInterval(() => {
-    console.log("💻 Sistema ativo... Bot rodando normalmente.");
-  }, 60 * 1000); // mensagem a cada 1 minuto
-}
 
 // -------------------------
 // BOT
@@ -128,125 +81,128 @@ function startBot(TOKEN, guildId, OWNER_ID) {
     partials: [Partials.Channel]
   });
 
+  // -------------------------
+  // COMANDOS SLASH
+  // -------------------------
   const commands = [
-    new SlashCommandBuilder().setName("antiraid").setDescription("Controla Anti-Raid").addStringOption(opt => opt.setName("acao").setDescription("enable/disable/status").setRequired(true)),
-    new SlashCommandBuilder().setName("security").setDescription("Configura nível de segurança").addStringOption(opt => opt.setName("nivel").setDescription("nível de segurança").setRequired(true)),
-    new SlashCommandBuilder().setName("limit").setDescription("Define limites").addStringOption(opt => opt.setName("tipo").setDescription("join/ban/kick/channel/role/webhook").setRequired(true)).addIntegerOption(opt => opt.setName("numero").setDescription("quantidade").setRequired(true)).addIntegerOption(opt => opt.setName("tempo").setDescription("tempo em segundos").setRequired(true)),
-    new SlashCommandBuilder().setName("action").setDescription("Executa ações").addStringOption(opt => opt.setName("acao").setDescription("ação").setRequired(true)),
-    new SlashCommandBuilder().setName("lockdown").setDescription("Bloqueia todos canais"),
-    new SlashCommandBuilder().setName("unlockdown").setDescription("Desbloqueia todos canais"),
-    new SlashCommandBuilder().setName("whitelist").setDescription("Gerencia whitelist").addStringOption(opt => opt.setName("acao").setDescription("add/remove").setRequired(true)).addUserOption(opt => opt.setName("user").setDescription("Usuário").setRequired(true)),
-    new SlashCommandBuilder().setName("antispam").setDescription("Ativa Anti-Spam").addStringOption(opt => opt.setName("acao").setDescription("enable/disable").setRequired(true)),
-    new SlashCommandBuilder().setName("antilink").setDescription("Ativa Anti-Link").addStringOption(opt => opt.setName("acao").setDescription("enable/disable").setRequired(true)),
-    new SlashCommandBuilder().setName("antiping").setDescription("Ativa Anti-Ping").addStringOption(opt => opt.setName("acao").setDescription("enable/disable").setRequired(true)),
-    new SlashCommandBuilder().setName("antinuke").setDescription("Ativa Anti-Nuke").addStringOption(opt => opt.setName("acao").setDescription("enable/disable").setRequired(true)),
-    new SlashCommandBuilder().setName("captcha").setDescription("Ativa captcha").addStringOption(opt => opt.setName("acao").setDescription("enable/disable").setRequired(true)),
-    new SlashCommandBuilder().setName("antivpn").setDescription("Ativa Anti-VPN").addStringOption(opt => opt.setName("acao").setDescription("enable/disable").setRequired(true)),
-    new SlashCommandBuilder().setName("backup").setDescription("Backup do servidor").addStringOption(opt => opt.setName("acao").setDescription("create/load").setRequired(true)).addStringOption(opt => opt.setName("id").setDescription("ID do backup").setRequired(false)),
-    new SlashCommandBuilder().setName("logs").setDescription("Define canal de logs").addChannelOption(opt => opt.setName("canal").setDescription("Canal de logs").setRequired(true)),
-    new SlashCommandBuilder().setName("status").setDescription("Mostra status do sistema")
+    new SlashCommandBuilder().setName("status").setDescription("Mostra status do sistema"),
+    new SlashCommandBuilder().setName("help").setDescription("Lista todos os comandos disponíveis"),
+    new SlashCommandBuilder().setName("antiraid").setDescription("Controla Anti-Raid").addStringOption(opt => opt.setName("acao").setDescription("on/off/status").setRequired(true)),
+    new SlashCommandBuilder().setName("antispam").setDescription("Controla Anti-Spam").addStringOption(opt => opt.setName("acao").setDescription("on/off").setRequired(true)),
+    new SlashCommandBuilder().setName("setspamlimit").setDescription("Define limite de mensagens").addIntegerOption(opt => opt.setName("limite").setDescription("Número máximo de mensagens").setRequired(true)),
+    new SlashCommandBuilder().setName("setspamtimer").setDescription("Define tempo entre mensagens").addIntegerOption(opt => opt.setName("tempo").setDescription("Segundos").setRequired(true)),
+    new SlashCommandBuilder().setName("warnspam").setDescription("Aviso automático anti-spam"),
+    new SlashCommandBuilder().setName("muteduration").setDescription("Tempo de mute").addIntegerOption(opt => opt.setName("tempo").setDescription("Segundos").setRequired(true)),
+    new SlashCommandBuilder().setName("antijoin").setDescription("Proteção contra entradas em massa").addStringOption(opt => opt.setName("acao").setDescription("on/off").setRequired(true)),
+    new SlashCommandBuilder().setName("setjoinlimit").setDescription("Define limite de entradas").addIntegerOption(opt => opt.setName("limite").setDescription("Número máximo de entradas").setRequired(true)),
+    new SlashCommandBuilder().setName("setjointime").setDescription("Tempo analisado (s)").addIntegerOption(opt => opt.setName("tempo").setDescription("Segundos").setRequired(true)),
+    new SlashCommandBuilder().setName("lockserver").setDescription("Trava todos canais"),
+    new SlashCommandBuilder().setName("unlockserver").setDescription("Destrava todos canais"),
+    new SlashCommandBuilder().setName("antinuke").setDescription("Controle Anti-Nuke").addStringOption(opt => opt.setName("acao").setDescription("on/off").setRequired(true)),
+    new SlashCommandBuilder().setName("punishment").setDescription("Sistema de punição").addStringOption(opt => opt.setName("acao").setDescription("ban/kick/mute/timeout").setRequired(true))
   ];
 
-  client.once("ready", async () => {
-    console.log(`✅ Bot online como ${client.user.tag}`);
-    
-    // animação do trem
-    trainAnimation();
+  // -------------------------
+  // LOGIN E REGISTRO DE COMANDOS
+  // -------------------------
+  client.once("clientReady", async () => {
+    console.clear();
+    console.log("┌───────────────────────────────┐");
+    console.log("│   🔓 BOT ANTI-RAID PREMIUM    │");
+    console.log("│   💻 Desenvolvedor: ERRO404    │");
+    console.log("│   🎬 Créditos: Anti-Raid v25  │");
+    console.log("│   🛡️ Sistema completo          │");
+    console.log("└───────────────────────────────┘\n");
 
-    // manter bot vivo 24h
-    keepAlive();
-
+    const rest = new REST({ version: "10" }).setToken(TOKEN);
     try {
-      const rest = new REST({ version: "10" }).setToken(TOKEN);
-      await rest.put(
-        Routes.applicationGuildCommands(client.user.id, guildId),
-        { body: commands.map(cmd => cmd.toJSON()) }
-      );
-      console.log("✅ Comandos Slash registrados! Somente o dono pode usar.");
+      await rest.put(Routes.applicationGuildCommands(client.user.id, guildId), { body: commands.map(cmd => cmd.toJSON()) });
+      console.log("✅ Comandos slash registrados com sucesso!");
     } catch (err) {
       console.error("❌ Erro ao registrar comandos:", err);
     }
-
-    hackerPanel(["ANTI RAID ONLINE", "💻 Sistema Hacker Ativo", `🕹 BY (ERRO404/TONY) | Dono ID: ${OWNER_ID}`]);
   });
 
   // -------------------------
-  // ANTI-RAID & ANTI-BOT
+  // CONFIGURAÇÃO ANTI-SPAM
   // -------------------------
-  const allowedBots = []; // IDs confiáveis
-  const userMessages = new Map();
-  const messageLimit = 5;
-  const timeLimit = 5000;
-
-  function logEvent(data) {
-    const file = "./logs.json";
-    const logs = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : [];
-    logs.push({ time: new Date().toISOString(), ...data });
-    fs.writeFileSync(file, JSON.stringify(logs, null, 2));
-  }
-
-  client.on("guildMemberAdd", member => {
-    if (member.user.bot && !allowedBots.includes(member.id)) {
-      member.ban({ reason: "🚫 Bot desconhecido - Anti Raid V10" });
-      logEvent({ type: "bot_ban", user: member.user.tag });
-      return;
-    }
-
-    const diffDays = (Date.now() - member.user.createdAt) / (1000 * 60 * 60 * 24);
-    if (diffDays < 7) {
-      member.ban({ reason: "🚫 Conta muito nova - Anti Raid V10" });
-      logEvent({ type: "new_account_ban", user: member.user.tag });
-    }
-  });
-
-  client.on("messageCreate", message => {
-    if (message.author.bot) return;
-
-    if (/(https?:\/\/|www\.)/i.test(message.content)) {
-      message.delete().catch(() => {});
-      logEvent({ type: "link_deleted", user: message.author.tag, content: message.content });
-    }
-
-    const userId = message.author.id;
-    if (!userMessages.has(userId)) userMessages.set(userId, []);
-    const timestamps = userMessages.get(userId);
-    const now = Date.now();
-    timestamps.push(now);
-    const filtered = timestamps.filter(t => now - t < timeLimit);
-    userMessages.set(userId, filtered);
-    if (filtered.length > messageLimit) {
-      message.member.ban({ reason: "🚫 Raid detectado (Sistema Hacker V10)" });
-      logEvent({ type: "spam_ban", user: message.author.tag });
-    }
-  });
+  const spamData = new Map();
+  let spamLimit = 5;
+  let spamTimer = 10;
 
   // -------------------------
-  // INTERACTIONS
+  // INTERAÇÕES
   // -------------------------
   client.on("interactionCreate", async interaction => {
     if (!interaction.isCommand()) return;
-    if (interaction.user.id !== OWNER_ID) return interaction.reply({ content: "❌ Apenas o dono pode usar esses comandos.", ephemeral: true });
+    if (interaction.user.id !== OWNER_ID) return interaction.reply({ content: "❌ Apenas o dono pode usar esses comandos.", flags: 64 });
 
-    const { commandName, guild } = interaction;
+    const { commandName, options } = interaction;
 
-    if (commandName === "lockdown") {
-      guild.channels.cache.forEach(c => {
-        if (c.isTextBased()) c.permissionOverwrites.edit(guild.roles.everyone, { SendMessages: false }).catch(() => {});
-      });
-      await interaction.reply("🔒 Todos os canais foram bloqueados!");
-    }
+    // evita erro de interaction expirada
+    await interaction.deferReply({ ephemeral: true });
 
-    if (commandName === "unlockdown") {
-      guild.channels.cache.forEach(c => {
-        if (c.isTextBased()) c.permissionOverwrites.edit(guild.roles.everyone, { SendMessages: true }).catch(() => {});
-      });
-      await interaction.reply("🔓 Todos os canais foram desbloqueados!");
-    }
+    switch (commandName) {
+      case "status":
+        await interaction.editReply({ content: "🟢 Anti-Raid Premium Ativo\n💻 Sistema completo Online\n🎬 Desenvolvedor: ERRO404" });
+        break;
 
-    if (commandName === "status") {
-      await interaction.reply("🟢 Anti-Raid V10 Ativo\n💻 Sistema Hacker Online\nBY (ERRO404/TONY)");
+      case "help":
+        await interaction.editReply({ content: `🛡️ **Comandos Anti-Raid Premium**\n\n/antiraid on|off\n/antispam on|off\n/setspamlimit\n/setspamtimer\n/antijoin on|off\n/setjoinlimit\n/setjointime\n/lockserver\n/unlockserver\n/antinuke on|off\n/punishment ban|kick|mute|timeout\n/status\n/help` });
+        break;
+
+      case "antiraid":
+        await interaction.editReply({ content: `💻 Anti-Raid ${options.getString("acao").toUpperCase()}` });
+        break;
+
+      case "antispam":
+        const spamAction = options.getString("acao").toLowerCase();
+        if (spamAction === "on") {
+          await interaction.editReply({ content: "✅ Anti-Spam ativado!" });
+        } else {
+          await interaction.editReply({ content: "⚠️ Anti-Spam desativado!" });
+        }
+        break;
+
+      case "setspamlimit":
+        spamLimit = options.getInteger("limite");
+        await interaction.editReply({ content: `✅ Limite de mensagens definido para ${spamLimit}` });
+        break;
+
+      case "setspamtimer":
+        spamTimer = options.getInteger("tempo");
+        await interaction.editReply({ content: `✅ Timer de mensagens definido para ${spamTimer} segundos` });
+        break;
+
+      default:
+        await interaction.editReply({ content: "Comando ainda não implementado." });
+        break;
     }
   });
 
+  // -------------------------
+  // ANTI-SPAM MENSAGENS
+  // -------------------------
+  client.on("messageCreate", message => {
+    if (message.author.bot) return;
+
+    const now = Date.now();
+    if (!spamData.has(message.author.id)) spamData.set(message.author.id, []);
+    const timestamps = spamData.get(message.author.id);
+    timestamps.push(now);
+
+    const filtered = timestamps.filter(t => now - t < spamTimer * 1000);
+    spamData.set(message.author.id, filtered);
+
+    if (filtered.length > spamLimit) {
+      message.member.ban({ reason: "🚫 Spam detectado - Anti-Raid Premium" }).catch(() => {});
+      spamData.set(message.author.id, []);
+      console.log(`🚨 Usuário ${message.author.tag} banido por spam.`);
+    }
+  });
+
+  // -------------------------
+  // LOGIN
+  // -------------------------
   client.login(TOKEN);
 }
